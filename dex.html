@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings & Device Features</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+            --border-color: #444444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 0;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (max-width: 968px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .mobile-preview {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px 10px;
+            width: 320px;
+            height: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .mobile-screen {
+            background: var(--bg-color);
+            border-radius: 10px;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease;
+        }
+        
+        .mobile-notch {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 20px;
+            background: var(--card-bg);
+            border-radius: 0 0 10px 10px;
+            z-index: 10;
+        }
+        
+        .top-bar {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .app-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .top-icons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .top-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .top-icon:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .bottom-nav {
+            background: var(--primary);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.3rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            flex: 1;
+            max-width: 60px;
+            color: white;
+        }
+        
+        .nav-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .nav-label {
+            font-size: 0.7rem;
+        }
+        
+        /* Settings Page Styles */
+        .settings-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .setting-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .setting-label {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        
+        .setting-description {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .dark-mode .setting-description {
+            color: #aaa;
+        }
+        
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-pic input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .btn-danger {
+            background: var(--accent);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: border 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Device Features Styles */
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-content {
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .status-online {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+        
+        .status-offline {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--accent);
+        }
+        
+        .camera-preview {
+            width: 100%;
+            height: 200px;
+            background: #333;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .camera-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .location-map {
+            width: 100%;
+            height: 200px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-mode .location-map {
+            background: #444;
+        }
+        
+        .coordinates {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        
+        .device-list {
+            list-style: none;
+        }
+        
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .device-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .device-status {
+            font-size: 0.8rem;
+        }
+        
+        .feature-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Settings & Device Features</h1>
+            <p class="tagline">Complete settings page with device functionality examples</p>
+        </header>
+        
+        <div class="app-container">
+            <div class="mobile-preview">
+                <div class="mobile-notch"></div>
+                <div class="mobile-screen">
+                    <div class="top-bar">
+                        <div class="app-title">Settings</div>
+                        <div class="top-icons">
+                            <div class="top-icon">🔍</div>
+                            <div class="top-icon">⋮</div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-area">
+                        <!-- Profile Section -->
+                        <div class="settings-section">
+                            <div class="section-title">Profile</div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Profile Photo</div>
+                                    <div class="setting-description">Update your profile picture</div>
+                                </div>
+                                <div class="profile-pic" onclick="document.getElementById('profile-upload').click()">
+                                    JD
+                                    <input type="file" id="profile-upload" accept="image/*" onchange="handleProfileUpload(event)">
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">John Doe</div>
+                                    <div class="setting-description">Personal information</div>
+                                </div>
+                                <button class="btn" onclick="editProfile()">Edit</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Account Section -->
+                        <div class="settings-section">
+                            <div class="section-title">Account</div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Balance</div>
+                                    <div class="setting-description">$1,250.75</div>
+                                </div>
+                                <div class="feature-buttons">
+                                    <button class="btn btn-success" onclick="showDeposit()">Deposit</button>
+                                    <button class="btn btn-warning" onclick="showWithdraw()">Withdraw</button>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Change Password</div>
+                                    <div class="setting-description">Update your login password</div>
+                                </div>
+                                <button class="btn" onclick="changePassword()">Change</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Preferences Section -->
+                        <div class="settings-section">
+                            <div class="section-title">Preferences</div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Dark Mode</div>
+                                    <div class="setting-description">Switch between dark and light theme</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Notifications</div>
+                                    <div class="setting-description">Manage your notification preferences</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Language</div>
+                                    <div class="setting-description">English (US)</div>
+                                </div>
+                                <button class="btn" onclick="changeLanguage()">Change</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Security Section -->
+                        <div class="settings-section">
+                            <div class="section-title">Security</div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Two-Factor Authentication</div>
+                                    <div class="setting-description">Add an extra layer of security</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-label">Login Activity</div>
+                                    <div class="setting-description">View your recent login history</div>
+                                </div>
+                                <button class="btn" onclick="viewLoginActivity()">View</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions Section -->
+                        <div class="settings-section">
+                            <div class="section-title">Actions</div>
+                            
+                            <button class="btn" style="width: 100%; margin-bottom: 0.5rem;" onclick="exportData()">Export Data</button>
+                            <button class="btn btn-danger" style="width: 100%;" onclick="deleteAccount()">Delete Account</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bottom-nav">
+                        <div class="nav-item" onclick="changePage('home')">
+                            <div class="nav-icon">🏠</div>
+                            <div class="nav-label">Home</div>
+                        </div>
+                        <div class="nav-item" onclick="changePage('tasks')">
+                            <div class="nav-icon">✅</div>
+                            <div class="nav-label">Tasks</div>
+                        </div>
+                        <div class="nav-item" onclick="changePage('profile')">
+                            <div class="nav-icon">👤</div>
+                            <div class="nav-label">Profile</div>
+                        </div>
+                        <div class="nav-item active" onclick="changePage('settings')">
+                            <div class="nav-icon">⚙️</div>
+                            <div class="nav-label">Settings</div>
+                        </div>
+                        <div class="nav-item" onclick="changePage('more')">
+                            <div class="nav-icon">⋮</div>
+                            <div class="nav-label">More</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h2>Settings Features</h2>
+                <p>This settings page includes:</p>
+                <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                    <li>Profile photo upload functionality</li>
+                    <li>User information display and editing</li>
+                    <li>Deposit and withdrawal actions</li>
+                    <li>Password change interface</li>
+                    <li>Dark/light mode toggle</li>
+                    <li>Notification preferences</li>
+                    <li>Security settings</li>
+                    <li>Account actions</li>
+                </ul>
+                
+                <div class="code-block">
+                    <span class="code-comment">// JavaScript for dark mode toggle</span><br>
+                    <span class="code-keyword">function</span> <span class="code-function">toggleDarkMode</span>() {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">const</span> body = document.<span class="code-function">querySelector</span>(<span class="code-string">'body'</span>);<br>
+                    &nbsp;&nbsp;body.classList.<span class="code-function">toggle</span>(<span class="code-string">'dark-mode'</span>);<br>
+                    &nbsp;&nbsp;<span class="code-keyword">const</span> isDarkMode = body.classList.<span class="code-function">contains</span>(<span class="code-string">'dark-mode'</span>);<br>
+                    &nbsp;&nbsp;localStorage.<span class="code-function">setItem</span>(<span class="code-string">'darkMode'</span>, isDarkMode);<br>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <h2 style="margin-top: 3rem; text-align: center;">Device Features Examples</h2>
+        
+        <div class="features-container">
+            <!-- Feature 1: Device Tracking -->
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>📱</span> Device Tracking
+                </div>
+                <div class="feature-content">
+                    <p>Track device status and connectivity</p>
+                    
+                    <div class="device-list">
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-icon">📱</div>
+                                <div>
+                                    <div>iPhone 13</div>
+                                    <div class="device-status">Last active: 2 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="status-indicator status-online">Online</div>
+                        </div>
+                        
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-icon">💻</div>
+                                <div>
+                                    <div>MacBook Pro</div>
+                                    <div class="device-status">Last active: 5 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="status-indicator status-offline">Offline</div>
+                        </div>
+                        
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-icon">⌚</div>
+                                <div>
+                                    <div>Apple Watch</div>
+                                    <div class="device-status">Last active: 1 minute ago</div>
+                                </div>
+                            </div>
+                            <div class="status-indicator status-online">Online</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-buttons">
+                    <button class="btn" onclick="refreshDevices()">Refresh</button>
+                    <button class="btn btn-danger" onclick="disconnectAll()">Disconnect All</button>
+                </div>
+                
+                <div class="code-block">
+                    <span class="code-comment">// Check device connectivity status</span><br>
+                    <span class="code-keyword">function</span> <span class="code-function">checkDeviceStatus</span>(deviceId) {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">return</span> navigator.onLine ? <span class="code-string">'online'</span> : <span class="code-string">'offline'</span>;<br>
+                    }
+                </div>
+            </div>
+            
+            <!-- Feature 2: Camera Access -->
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>📷</span> Camera Access
+                </div>
+                <div class="feature-content">
+                    <p>Access device camera for photos and videos</p>
+                    
+                    <div class="camera-preview">
+                        <div id="camera-placeholder">Camera Feed</div>
+                        <video id="camera-feed" class="camera-feed" autoplay style="display: none;"></video>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Camera Options</label>
+                        <select class="input-field" id="camera-select">
+                            <option value="user">Front Camera</option>
+                            <option value="environment">Rear Camera</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="feature-buttons">
+                    <button class="btn btn-success" onclick="startCamera()">Start Camera</button>
+                    <button class="btn" onclick="capturePhoto()">Capture Photo</button>
+                    <button class="btn btn-danger" onclick="stopCamera()">Stop Camera</button>
+                </div>
+                
+                <div class="code-block">
+                    <span class="code-comment">// Access device camera</span><br>
+                    <span class="code-keyword">async function</span> <span class="code-function">startCamera</span>() {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">try</span> {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> stream = <span class="code-keyword">await</span> navigator.mediaDevices<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="code-function">getUserMedia</span>({ video: <span class="code-keyword">true</span> });<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;document.getElementById(<span class="code-string">'camera-feed'</span>).srcObject = stream;<br>
+                    &nbsp;&nbsp;} <span class="code-keyword">catch</span> (err) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="code-function">error</span>(<span class="code-string">"Error accessing camera:"</span>, err);<br>
+                    &nbsp;&nbsp;}<br>
+                    }
+                </div>
+            </div>
+            
+            <!-- Feature 3: Location Tracking -->
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>📍</span> Location Tracking
+                </div>
+                <div class="feature-content">
+                    <p>Access device location and display on map</p>
+                    
+                    <div class="location-map">
+                        <div id="map-placeholder">Map View</div>
+                        <div class="coordinates" id="coordinates">Lat: 0.0000, Lng: 0.0000</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Location Accuracy</label>
+                        <select class="input-field" id="accuracy-select">
+                            <option value="high">High Accuracy</option>
+                            <option value="balanced">Balanced</option>
+                            <option value="low">Low Power</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="feature-buttons">
+                    <button class="btn btn-success" onclick="getLocation()">Get Location</button>
+                    <button class="btn" onclick="watchLocation()">Track Location</button>
+                    <button class="btn btn-danger" onclick="stopTracking()">Stop Tracking</button>
+                </div>
+                
+                <div class="code-block">
+                    <span class="code-comment">// Get current device location</span><br>
+                    <span class="code-keyword">function</span> <span class="code-function">getLocation</span>() {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">if</span> (navigator.geolocation) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;navigator.geolocation.<span class="code-function">getCurrentPosition</span>(<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showPosition, handleLocationError<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;);<br>
+                    &nbsp;&nbsp;} <span class="code-keyword">else</span> {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;alert(<span class="code-string">"Geolocation is not supported by this browser."</span>);<br>
+                    &nbsp;&nbsp;}<br>
+                    }
+                </div>
+            </div>
+            
+            <!-- Feature 4: All Combined -->
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>🔗</span> All Features Combined
+                </div>
+                <div class="feature-content">
+                    <p>Integrated dashboard with all device features</p>
+                    
+                    <div class="device-status-panel">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Device Status</div>
+                                <div class="setting-description" id="combined-status">Checking...</div>
+                            </div>
+                            <div class="status-indicator" id="combined-indicator">-</div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Camera</div>
+                                <div class="setting-description" id="camera-status">Not active</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="camera-toggle" onchange="toggleCombinedCamera()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Location</div>
+                                <div class="setting-description" id="location-status">Not tracking</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="location-toggle" onchange="toggleCombinedLocation()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Auto-Refresh</label>
+                        <select class="input-field" id="refresh-interval">
+                            <option value="0">Disabled</option>
+                            <option value="5000">5 seconds</option>
+                            <option value="10000">10 seconds</option>
+                            <option value="30000">30 seconds</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="feature-buttons">
+                    <button class="btn btn-success" onclick="enableAllFeatures()">Enable All</button>
+                    <button class="btn btn-danger" onclick="disableAllFeatures()">Disable All</button>
+                </div>
+                
+                <div class="code-block">
+                    <span class="code-comment">// Combined device features controller</span><br>
+                    <span class="code-keyword">class</span> DeviceController {<br>
+                    &nbsp;&nbsp;<span class="code-function">constructor</span>() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.cameraActive = <span class="code-keyword">false</span>;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.locationTracking = <span class="code-keyword">false</span>;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.refreshInterval = <span class="code-keyword">null</span>;<br>
+                    &nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;<br>
+                    &nbsp;&nbsp;<span class="code-function">enableAll</span>() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.<span class="code-function">startCamera</span>();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.<span class="code-function">startLocationTracking</span>();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">this</span>.<span class="code-function">startStatusMonitoring</span>();<br>
+                    &nbsp;&nbsp;}<br>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Settings Page Functions
+        function handleProfileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                alert(`Profile picture updated: ${file.name}`);
+                // In a real app, you would upload the file to a server
+                // and update the profile picture display
+            }
+        }
+        
+        function editProfile() {
+            alert('Opening profile editor...');
+            // In a real app, this would open a modal or navigate to an edit page
+        }
+        
+        function showDeposit() {
+            alert('Opening deposit interface...');
+            // In a real app, this would show a deposit form
+        }
+        
+        function showWithdraw() {
+            alert('Opening withdrawal interface...');
+            // In a real app, this would show a withdrawal form
+        }
+        
+        function changePassword() {
+            alert('Opening password change form...');
+            // In a real app, this would show a password change form
+        }
+        
+        function toggleDarkMode() {
+            const body = document.querySelector('body');
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            // Update toggle state
+            document.getElementById('dark-mode-toggle').checked = isDarkMode;
+        }
+        
+        function changeLanguage() {
+            alert('Opening language selection...');
+        }
+        
+        function viewLoginActivity() {
+            alert('Showing login activity...');
+        }
+        
+        function exportData() {
+            alert('Preparing data export...');
+        }
+        
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                alert('Account deletion process started...');
+            }
+        }
+        
+        function changePage(page) {
+            alert(`Navigating to ${page} page...`);
+            // In a real app, this would navigate to the selected page
+        }
+        
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('dark-mode-toggle').checked = true;
+        }
+        
+        // Device Tracking Functions
+        function refreshDevices() {
+            alert('Refreshing device list...');
+            // In a real app, this would fetch the latest device status from a server
+        }
+        
+        function disconnectAll() {
+            if (confirm('Disconnect all devices?')) {
+                alert('Disconnecting all devices...');
+            }
+        }
+        
+        // Camera Functions
+        let cameraStream = null;
+        
+        function startCamera() {
+            alert('Starting camera... (In a real app, this would access your camera)');
+            document.getElementById('camera-placeholder').style.display = 'none';
+            document.getElementById('camera-feed').style.display = 'block';
+            
+            // In a real implementation:
+            /*
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    cameraStream = stream;
+                    document.getElementById('camera-feed').srcObject = stream;
+                })
+                .catch(err => {
+                    console.error("Error accessing camera:", err);
+                    alert("Could not access camera: " + err.message);
+                });
+            */
+        }
+        
+        function capturePhoto() {
+            alert('Photo captured! (In a real app, this would save the photo)');
+        }
+        
+        function stopCamera() {
+            alert('Stopping camera...');
+            document.getElementById('camera-placeholder').style.display = 'flex';
+            document.getElementById('camera-feed').style.display = 'none';
+            
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+        }
+        
+        // Location Functions
+        let locationWatchId = null;
+        
+        function getLocation() {
+            alert('Getting current location... (In a real app, this would show your actual location)');
+            document.getElementById('coordinates').textContent = 'Lat: 40.7128, Lng: -74.0060'; // NYC coordinates as example
+        }
+        
+        function watchLocation() {
+            alert('Starting location tracking... (In a real app, this would track your movement)');
+            
+            // In a real implementation:
+            /*
+            locationWatchId = navigator.geolocation.watchPosition(
+                position => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    document.getElementById('coordinates').textContent = 
+                        `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
+                },
+                error => {
+                    console.error("Error getting location:", error);
+                },
+                { enableHighAccuracy: true }
+            );
+            */
+        }
+        
+        function stopTracking() {
+            alert('Stopping location tracking...');
+            if (locationWatchId) {
+                navigator.geolocation.clearWatch(locationWatchId);
+                locationWatchId = null;
+            }
+        }
+        
+        // Combined Features Functions
+        function toggleCombinedCamera() {
+            const isChecked = document.getElementById('camera-toggle').checked;
+            document.getElementById('camera-status').textContent = 
+                isChecked ? 'Active' : 'Not active';
+                
+            if (isChecked) {
+                startCamera();
+            } else {
+                stopCamera();
+            }
+        }
+        
+        function toggleCombinedLocation() {
+            const isChecked = document.getElementById('location-toggle').checked;
+            document.getElementById('location-status').textContent = 
+                isChecked ? 'Tracking' : 'Not tracking';
+                
+            if (isChecked) {
+                watchLocation();
+            } else {
+                stopTracking();
+            }
+        }
+        
+        function enableAllFeatures() {
+            document.getElementById('camera-toggle').checked = true;
+            document.getElementById('location-toggle').checked = true;
+            toggleCombinedCamera();
+            toggleCombinedLocation();
+            document.getElementById('combined-status').textContent = 'All features active';
+            document.getElementById('combined-indicator').textContent = 'Online';
+            document.getElementById('combined-indicator').className = 'status-indicator status-online';
+        }
+        
+        function disableAllFeatures() {
+            document.getElementById('camera-toggle').checked = false;
+            document.getElementById('location-toggle').checked = false;
+            toggleCombinedCamera();
+            toggleCombinedLocation();
+            document.getElementById('combined-status').textContent = 'All features disabled';
+            document.getElementById('combined-indicator').textContent = 'Offline';
+            document.getElementById('combined-indicator').className = 'status-indicator status-offline';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial status for combined features
+            document.getElementById('combined-status').textContent = 'Ready';
+            document.getElementById('combined-indicator').textContent = 'Online';
+            document.getElementById('combined-indicator').className = 'status-indicator status-online';
+        });
+    </script>
+</body>
+</html>
